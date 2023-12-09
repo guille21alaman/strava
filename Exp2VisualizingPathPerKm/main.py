@@ -49,7 +49,7 @@ if __name__ == "__main__":
                             
                     df = df._append(new_row, ignore_index=True)
         else:
-            print("Not a run: ", activity["type"])
+            print("Not a run: ", activity_type)
 
     df = df.sort_values(by=["average_speed"], ascending=True)
     df.to_csv("Exp2VisualizingPathPerKm/data/AllTime1kmSplits.csv", index=False, header=True, sep=";", decimal=",")
