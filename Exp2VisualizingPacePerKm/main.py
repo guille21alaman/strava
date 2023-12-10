@@ -3,13 +3,37 @@ from stravaApiHelpers import *
 from helpers import *
 import pandas as pd
 
+norway = True
+if norway == True:
+    #norweigan zones
+    zone_1 = datetime.timedelta(seconds=4*60+55) #4:45 or above (Easy)
+    zone_2 = datetime.timedelta(seconds=4*60+44) #4:05-4:44 (Threshold)
+    # more than 4:05 anaerobic 
+    zones = [zone_1, zone_2]
+    zones_names = ["Easy", "Threshold", "Anaerobic"]
+
+else:
+    #approximate references for zones
+    zone_1 = datetime.timedelta(seconds=5*60+20) #5:20 (Recovery-Easy)
+    zone_2 = datetime.timedelta(seconds=4*60+44) #4:44 4:44-5:20 (Aerobic-Base)
+    zone_3 = datetime.timedelta(seconds=4*60+29) #4:29-4:44 (Tempo)
+    zone_4 = datetime.timedelta(seconds=4*60+16) #4:16-4:29 (Lactate Threshold)
+    zone_5 = datetime.timedelta(seconds=3*60+42) #4:16-3:42 (Anaerobic)
+    #zone_6 = There is always an automatic zone created (i.e. >zone 5) - (Anaerobic Plus)
+    zones = [zone_1, zone_2, zone_3, zone_4, zone_5]
+    zones_names = ["Recovery-Easy","Aerobic-Base","Tempo","Lactate Threshold","Anaerobic", "Anaerobic Plus"]
+
+if len(zones_names) != 0:
+    assert len(zones)+1 == len(zones_names)
+    
+
 if __name__ == "__main__":
     
     # Configure OAuth2 access token for authorization: strava_oauth
     access_token = os.getenv('ACCESS_TOKEN')
 
     #limit activities to get from API - could be also filtered by date
-    limit_activites = 200
+    limit_activites = 50
 
     #get all activities
     activities = get_all_activities(access_token, limit_activites)
@@ -43,7 +67,7 @@ if __name__ == "__main__":
                     new_row["elevation_difference_in_m"] = split["elevation_difference"]
                     #add trianing zones if heart rate not available
                     if split["pace_zone"] == 0:
-                        new_row["pace_zone"] = extract_pace_zone(new_row["average_speed"])
+                        new_row["pace_zone"], zones = extract_pace_zone(new_row["average_speed"], zones)
                     else:
                         new_row["pace_zone"] = split["pace_zone"]
                             
@@ -52,4 +76,4 @@ if __name__ == "__main__":
             print("Not a run: ", activity_type)
 
     df = df.sort_values(by=["average_speed"], ascending=True)
-    df.to_csv("Exp2VisualizingPathPerKm/data/AllTime1kmSplits.csv", index=False, header=True, sep=";", decimal=",")
+    df.to_csv("Exp2VisualizingPacePerKm/data/AllTime1kmSplits.csv", index=False, header=True, sep=";", decimal=",")
