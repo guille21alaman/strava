@@ -6,8 +6,8 @@ import pandas as pd
 norway = True
 if norway == True:
     #norweigan zones
-    zone_1 = datetime.timedelta(seconds=4*60+55) #4:45 or above (Easy)
-    zone_2 = datetime.timedelta(seconds=4*60+44) #4:05-4:44 (Threshold)
+    zone_1 = datetime.timedelta(seconds=4*60+55) #4:55 or above (Easy)
+    zone_2 = datetime.timedelta(seconds=4*60+5) #4:05-4:54 (Threshold)
     # more than 4:05 anaerobic 
     zones = [zone_1, zone_2]
     zones_names = ["Easy", "Threshold", "Anaerobic"]
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     access_token = os.getenv('ACCESS_TOKEN')
 
     #limit activities to get from API - could be also filtered by date
-    limit_activites = 50
+    limit_activites = 200
 
     #get all activities
     activities = get_all_activities(access_token, limit_activites)
