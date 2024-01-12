@@ -3,6 +3,7 @@ from stravaApiHelpers import *
 from helpersVisualize import *
 
 #external libs
+# import streamlit as st
 import pandas as pd 
 import numpy as np
 from bokeh.plotting import figure, show, output_file
@@ -15,6 +16,9 @@ from bokeh.models import LinearAxis, FixedTicker, Range1d, HoverTool
 
 #read file
 df = pd.read_csv("Exp3VisualizingIntervalTrainings/data/intervals400m.csv", sep=";")
+
+#column pace as string (needed later on)
+df["pace"] = transform_seconds_and_distance_to_pace(array_seconds=df["seconds"].values, distance=400)
 
 #assign colors depending on date timestamps
 df["date_color"] = get_color_palette_from_float_column(df, "date_timestamp", "Reds") #matplotlib colormaps: https://matplotlib.org/stable/users/explain/colors/colormaps.html
@@ -31,12 +35,14 @@ df = df.sort_values(by=["session_no","lap"])
 #convert session_no to str to avoid problems when joining cols later
 df["session_no"] = "session_" + df["session_no"].astype(str)
 
+
 #column selection
 df = df[[
     "lap", 
     "session_no", 
-    "seconds","distance",
-    "date_color","date","location", "activity_id","activity_name"]]
+    "seconds","distance","pace",
+    "date_color","date","location", "activity_id","activity_name","total_km","elevation_gain_interval",
+    "average_heartrate","maximum_heartrate","recovery_average_heartrate","recovery_maximum_heartrate"]]
 
 #extract fastest and slowest lap for later usage in extra y axis
 fastest_lap, slowest_lap = df["seconds"].max(), df["seconds"].min()
@@ -51,9 +57,15 @@ array_y_ticks_pace = transform_seconds_and_distance_to_pace(array_y_ticks,distan
 #pivoting the table to visualize (each row represents one of the 10 laps, each column contains the data of each run)
 df = df.pivot(index='lap',
                columns=['session_no'],
-               values=['seconds','date','date_color','location','distance',"activity_id","activity_name"])
+               values=['seconds','date','date_color','location', "pace",
+                       'distance',"activity_id","activity_name","total_km", "elevation_gain_interval",
+                       "average_heartrate","maximum_heartrate","recovery_average_heartrate","recovery_maximum_heartrate"])
 df = df.reset_index()
 df.columns = ['_'.join(reversed(col)).strip() if "" not in col else "".join(col).strip() for col in df.columns.values] #if else to avoid lap to be stored like "lap_" #also reversed to have session_x_seconds instead of seconds_session_x
+
+
+#transform heartrate columns to int
+df = col_float_to_int(df=df, matching_string="heartrate")
 
 #################
 # VISUALIZATION #
@@ -95,7 +107,11 @@ for col in y_variable_names:
     legend_date = df[session_no+"_date"].unique()[0].strftime("%d-%m-%Y")
     legend_location = df[session_no+"_location"].unique()[0]
     legend_activity_id = df[session_no+"_activity_id"].unique()[0]
-    legend_ref_name = legend_session+": "+legend_date+" - %s" %legend_location + " - %s" %legend_activity_id
+    legend_ref_name = legend_session+": "+legend_date+" - %s" %legend_location + " - ID: %s" %legend_activity_id
+    #hover stats
+    fastest_interval, slowest_interval, average_interval = calculate_fastest_slowest_and_average_interval(df, "%s_seconds" %session_no)
+    total_km_round = round(df["%s_total_km" %session_no].unique()[0],2)
+    average_elevation_gain_session = round(df["%s_elevation_gain_interval"%session_no].mean(),2)
     circle= p.circle(
         x=x, 
         y=col, 
@@ -107,7 +123,13 @@ for col in y_variable_names:
         )
     circle_hover = HoverTool(renderers=[circle], tooltips=[
         ("Lap: ","@lap"),
-        ("Color: ","@%s_date_color" %session_no),
+        ("Pace: ", "@%s_pace min/km" %session_no),
+        ("Elevation Gain in Lap: ", "@%s_elevation_gain_interval m" %session_no),
+        ("Average Heart Rate Within Interval: ", "@%s_average_heartrate bpm" %session_no),
+        ("Average Heart Rate Within Rest: ", "@%s_recovery_average_heartrate bpm" %session_no),
+        ("Maximum Heart Rate Within Interval: ", "@%s_maximum_heartrate bpm" %session_no),
+        ("Maximum Heart Rate Within Rest: ", "@%s_recovery_maximum_heartrate bpm" %session_no),
+
         ])
     p.add_tools(circle_hover)
     line = p.line(
@@ -115,13 +137,18 @@ for col in y_variable_names:
         y=col, 
         source=df, 
         color=color, 
-        line_width=2,
+        line_width=5,
         legend_label="%s" %legend_ref_name
         )
     line_hover = HoverTool(renderers=[line], tooltips=[
-        ("Date: ", "@%s_date" %session_no),
-        ("Seconds: ","@%s_seconds" %session_no),
-        ("Activity Name: ", "@%s_activity_name" %session_no)
+        ("Activity Name: ", "@%s_activity_name" %session_no),
+        ("Date: ", "%s" %legend_date),
+        ("Total km in the activity: ", "%s km" %total_km_round),
+        ("Seconds: ","@%s_seconds seconds" %session_no),
+        ("Slowest Interval: ", "%s" %slowest_interval),
+        ("Fastest Interval: ", "%s" %fastest_interval),
+        ("Average Pace: ", "%s" %average_interval),
+        ("Average Elevation Gain in Intervals", "%s" %average_elevation_gain_session),
         ])
     p.add_tools(line_hover)
 
@@ -131,3 +158,4 @@ output_file("Exp3VisualizingIntervalTrainings/output/intervals400m.html") #outpu
 
 # Show rendering
 show(p)
+# st.bokeh_chart(p, use_container_width=True) #https://github.com/streamlit/streamlit/issues/5858

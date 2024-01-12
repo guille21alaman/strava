@@ -24,13 +24,36 @@ def generate_numbers_within_range_with_increment(minimum: int, maximum: int, inc
 
     return numbers
 
+def secs_distance_to_secs_1000m(secs, distance):
+    #rule of three
+    secs_1000m_equivalent = secs*(1000/distance)
+    return secs_1000m_equivalent
+
+def secs_1000_to_pace_min_km(secs):
+    minutes = secs // 60
+    remaining_seconds = secs % 60
+    time_string = f"{int(minutes):02}:{int(remaining_seconds):02}"
+    return time_string
+
+def calculate_fastest_slowest_and_average_interval(df, col):
+    min_max_avg = [df[col].min(), df[col].max(), df[col].mean()]
+    result = {}
+    count = 0
+    for i in min_max_avg:
+        result[count] = "%s min/km" %(secs_1000_to_pace_min_km(secs_distance_to_secs_1000m(i,400)))
+        count+=1
+    return result[0], result[1], result[2]
+
 def transform_seconds_and_distance_to_pace(array_seconds, distance):
-    array_seconds_equivalent_for_1000_meters = array_seconds*(1000/distance) #rule of three
+    array_seconds_equivalent_for_1000_meters = secs_distance_to_secs_1000m(array_seconds, distance)
     result = []
     for seconds in array_seconds_equivalent_for_1000_meters:
-        minutes = seconds // 60
-        remaining_seconds = seconds % 60
-        time_string = f"{int(minutes):02}:{int(remaining_seconds):02}"
+        time_string = secs_1000_to_pace_min_km(seconds)
         result.append(time_string)
     return result
 
+def col_float_to_int(df, matching_string):
+    cols = [c for c in df.columns if matching_string in c]
+    for c in  cols:
+        df[c] = df[c].astype(int, errors="ignore")
+    return df 
