@@ -8,9 +8,9 @@ Welcome to my Strava API Playground, where we explore the endless possibilities 
 
 This repository is organized into experiments, each offering a unique insight into your Strava data. To replicate these experiments with your own Strava activities, follow the code and instructions in each folder and run the `main.py` file. Here's what you'll find in each experiment:
 
-- [**Experiment 1: Visualization of All Your Strava Activities on a Map**](..\Exp1VisualizingAllYourActivitiesInMap)
-- [**Experiment 2: Visualizing 1000m splits in Barplot with Pace Zones**](..\Exp2VisualizingPacePerKm)
-- [**Experiment 3: Visualizing Interval Trainings and Comparing Them Interactively**](..\Exp3VisualizingIntervalTrainings)
+- [**Experiment 1: Visualization of All Your Strava Activities on a Map**](https://github.com/guille21alaman/strava/Exp1VisualizingAllYourActivitiesInMap)
+- [**Experiment 2: Visualizing 1000m splits in Barplot with Pace Zones**](..https://github.com/guille21alaman/strava/Exp2VisualizingPacePerKm)
+- [**Experiment 3: Visualizing Interval Trainings and Comparing Them Interactively**](https://github.com/guille21alaman/strava/Exp3VisualizingIntervalTrainings)
 - **Experiment 4:** Work in Progress
 
 These experiments showcase just a fraction of what you can achieve with the Strava API. Feel free to extend these projects, create more visualizations, and contribute your improvements via pull requests.
