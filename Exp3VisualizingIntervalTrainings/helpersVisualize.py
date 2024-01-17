@@ -35,12 +35,12 @@ def secs_1000_to_pace_min_km(secs):
     time_string = f"{int(minutes):02}:{int(remaining_seconds):02}"
     return time_string
 
-def calculate_fastest_slowest_and_average_interval(df, col):
+def calculate_fastest_slowest_and_average_interval(df, col, distance):
     min_max_avg = [df[col].min(), df[col].max(), df[col].mean()]
     result = {}
     count = 0
     for i in min_max_avg:
-        result[count] = "%s min/km" %(secs_1000_to_pace_min_km(secs_distance_to_secs_1000m(i,400)))
+        result[count] = "%s min/km" %(secs_1000_to_pace_min_km(secs_distance_to_secs_1000m(i,distance)))
         count+=1
     return result[0], result[1], result[2]
 

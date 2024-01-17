@@ -15,10 +15,11 @@ from bokeh.models import LinearAxis, FixedTicker, Range1d, HoverTool
 ###################
 
 #read file
-df = pd.read_csv("Exp3VisualizingIntervalTrainings/data/intervals400m.csv", sep=";")
+interval_length_meters = 2000
+df = pd.read_csv("Exp3VisualizingIntervalTrainings/data/intervals%sm.csv" %interval_length_meters, sep=";")
 
 #column pace as string (needed later on)
-df["pace"] = transform_seconds_and_distance_to_pace(array_seconds=df["seconds"].values, distance=400)
+df["pace"] = transform_seconds_and_distance_to_pace(array_seconds=df["seconds"].values, distance=interval_length_meters)
 
 #assign colors depending on date timestamps
 df["date_color"] = get_color_palette_from_float_column(df, "date_timestamp", "Reds") #matplotlib colormaps: https://matplotlib.org/stable/users/explain/colors/colormaps.html
@@ -78,7 +79,7 @@ y="seconds"
 
 # create a new plot with a title and axis labels
 p = figure(
-    title="Visualization 400m Intervals", 
+    title="Visualization %s Intervals" %interval_length_meters, 
     x_axis_label=x.capitalize(), 
     y_axis_label=y.capitalize(), 
     width=1500,
@@ -109,7 +110,7 @@ for col in y_variable_names:
     legend_activity_id = df[session_no+"_activity_id"].unique()[0]
     legend_ref_name = legend_session+": "+legend_date+" - %s" %legend_location + " - ID: %s" %legend_activity_id
     #hover stats
-    fastest_interval, slowest_interval, average_interval = calculate_fastest_slowest_and_average_interval(df, "%s_seconds" %session_no)
+    fastest_interval, slowest_interval, average_interval = calculate_fastest_slowest_and_average_interval(df, "%s_seconds" %session_no, distance=interval_length_meters)
     total_km_round = round(df["%s_total_km" %session_no].unique()[0],2)
     average_elevation_gain_session = round(df["%s_elevation_gain_interval"%session_no].mean(),2)
     circle= p.circle(
@@ -154,7 +155,7 @@ for col in y_variable_names:
 
 #other params figure
 p.legend.location = "top_left" #more legend configs; https://docs.bokeh.org/en/latest/docs/first_steps/first_steps_3.html 
-output_file("Exp3VisualizingIntervalTrainings/output/intervals400m.html") #output location
+output_file("Exp3VisualizingIntervalTrainings/output/%sm.html" %interval_length_meters) #output location
 
 # Show rendering
 show(p)
