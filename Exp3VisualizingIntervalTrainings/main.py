@@ -16,10 +16,10 @@ from matplotlib.colors import to_hex
 if __name__ == "__main__":
     
     #limit activities to get from API - could be also filtered by date
-    limit_activites = 100
+    limit_activites = 50
 
     #length of the intervals to be visualized
-    interval_length_meters = 2000
+    interval_length_meters = 400
 
     # Configure OAuth2 access token for authorization: strava_oauth
     access_token = os.getenv('ACCESS_TOKEN')

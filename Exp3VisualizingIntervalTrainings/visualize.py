@@ -15,7 +15,7 @@ from bokeh.models import LinearAxis, FixedTicker, Range1d, HoverTool
 ###################
 
 #read file
-interval_length_meters = 2000
+interval_length_meters = 400
 df = pd.read_csv("Exp3VisualizingIntervalTrainings/data/intervals%sm.csv" %interval_length_meters, sep=";")
 
 #column pace as string (needed later on)
