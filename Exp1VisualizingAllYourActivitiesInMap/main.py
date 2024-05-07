@@ -8,11 +8,21 @@ from mapHelpers import *
 import datetime #for date conversion
 import logging
 
-#set up a logger with timestamp + message format
+# Set up a logger with timestamp + message format
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+# Create a formatter
 formatter = logging.Formatter('%(asctime)s - %(message)s')
+
+# Create a handler, set its level and formatter
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+handler.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(handler)
 
 # Configure OAuth2 access token for authorization: strava_oauth
 access_token = os.getenv('ACCESS_TOKEN')
