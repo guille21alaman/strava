@@ -144,9 +144,11 @@ for a in all_activities:
         #add routes to the map with color depending on distance
         folium.PolyLine(locations = decoded_coordinates, 
                     line_opacity = 0.1, popup=popup, color=colormap(a["distance"])).add_to(all_activities_map) 
-        
+
+logger.info("Saving Map...")   
+
 #save map in html file
 all_activities_map.save("Exp1VisualizingAllYourActivitiesInMap/all_activities_map.html")
  
 
- 
+#TODO: Add fun facts like most south point, most north, longest run, etc.!
