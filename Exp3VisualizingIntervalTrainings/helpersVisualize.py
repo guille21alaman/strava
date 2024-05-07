@@ -5,7 +5,7 @@ from matplotlib.colors import to_hex
 
 def get_color_palette_from_float_column(df, col_name, col_palette):
     cmap = plt.get_cmap(col_palette) #gets a color map
-    norm = plt.Normalize(df[col_name].min()-0.0005*df[col_name].min(), df[col_name].max()+0.0005*df[col_name].max()) #normalizes the column #TODO Smooth cleaner
+    norm = plt.Normalize(df[col_name].min()-0.0005*df[col_name].min(), df[col_name].max()+0.0005*df[col_name].max()) #normalizes the column 
     return df[col_name].apply(lambda x: to_hex(cmap(norm(x)), keep_alpha=True))  #returns the column with the colors depending on color map
 
 
