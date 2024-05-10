@@ -2,7 +2,6 @@ import logging
 
 # Set up a logger with timestamp + message format
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 # Create a formatter
 formatter = logging.Formatter('%(asctime)s - %(message)s')

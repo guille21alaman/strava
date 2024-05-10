@@ -1,7 +1,7 @@
 __pycache__
-Exp1VisualizingAllYourActivitiesInMap/all_activities_map.html
-Exp1VisualizingAllYourActivitiesInMap/data/*
+*/output/*
+*/data/*
 Exp2VisualizingPathPerKm/data/*
 Exp2VisualizingPathPerKm/vis/*
-data/*
+global_data/*
 .env 
