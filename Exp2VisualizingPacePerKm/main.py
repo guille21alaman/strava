@@ -1,7 +1,16 @@
+# Append parent folder to path
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import libraries
 import os #for env variable
 from stravaApiHelpers import *
 from helpers import *
 import pandas as pd
+from client.accessToken import *
+
+#refress access token strava api
+refresh_access_token()
 
 norway = True
 if norway == True:
@@ -33,7 +42,7 @@ if __name__ == "__main__":
     access_token = os.getenv('ACCESS_TOKEN')
 
     #limit activities to get from API - could be also filtered by date
-    limit_activites = 200
+    limit_activites = 10
 
     #get all activities
     activities = get_all_activities(access_token, limit_activites)

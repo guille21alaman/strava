@@ -1,3 +1,8 @@
+# Append parent folder to path
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import libraries
 import os 
 from stravaApiHelpers import *
 from bokeh.plotting import figure, show
@@ -10,16 +15,19 @@ from bokeh.transform import transform
 from bokeh.colors import Color
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_hex
+from client.accessToken import *
 
+#refress access token strava api
+refresh_access_token()
 
 
 if __name__ == "__main__":
     
     #limit activities to get from API - could be also filtered by date
-    limit_activites = 50
+    limit_activites = 20
 
     #length of the intervals to be visualized
-    interval_length_meters = 400
+    interval_length_meters = 2000
 
     # Configure OAuth2 access token for authorization: strava_oauth
     access_token = os.getenv('ACCESS_TOKEN')

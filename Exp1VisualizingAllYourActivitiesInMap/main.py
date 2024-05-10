@@ -1,3 +1,8 @@
+# Append parent folder to path
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import libraries
 import polyline #to decode polylines
 import folium #to draw maps using folium
 import branca #for colormap
@@ -7,6 +12,10 @@ from stravaApiHelpers import *
 from mapHelpers import *
 import datetime #for date conversion
 import logging
+from client.accessToken import *
+
+#refress access token strava api
+refresh_access_token()
 
 # Set up a logger with timestamp + message format
 logging.basicConfig(level=logging.INFO)

@@ -12,12 +12,6 @@ An example: all my 1km splits from the last 200 runs I saved in Strava;
 
 2. Customize your "pace zones" at [main.py](Exp2VisualizingPacePerKm\main.py).
 
-3. Set an environment variable with your Strava Access Token. You can do this by running the following command in your terminal:
+3. Run the [main.py](main.py) script using your preferred Python interpreter. This will generate a [csv](Exp2VisualizingPacePerKm\data\AllTime1kmSplits.csv) file with all your 1km splits. 
 
-   ```bash
-   export ACCESS_TOKEN={YourToken}
-   ```
-
-4. Run the [main.py](main.py) script using your preferred Python interpreter. This will generate a [csv](Exp2VisualizingPacePerKm\data\AllTime1kmSplits.csv) file with all your 1km splits. 
-
-5. Run [visualize.py](Exp2VisualizingPacePerKm\visualize.py) to generate your barplot.
+4. Run [visualize.py](Exp2VisualizingPacePerKm\visualize.py) to generate your barplot.

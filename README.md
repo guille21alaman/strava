@@ -55,11 +55,9 @@ If you're new to the Strava API, don't worry; it's relatively straightforward. F
     
     ![Automation](img/AutomatizeEnvironment.JPG)
 
-    - Since access tokens have a short expiration, configure the request to refresh the token using this POST request:
+    - Since access tokens have a short expiration, we have configured inside the [client](client/) folder an [script](client/accessToken.py) that refreshes the access token which runs with every experiment. For it to work, you will need to set up your enviornmental variables manually in a file called .env inside the client folder (or using any other secret management tool of your choice). Make sure not to share your secrets!
 
-    ```
-    https://www.strava.com/oauth/token?client_id={{clientId}}&client_secret={{clientSecret}}&code={{authorizationCode}}&grant_type=refresh_token&refresh_token={{refreshToken}}
-    ```
+      ![Env](img/envVariables.png)
 
     As before, automate this process in the "Tests" tab. You will need this if you work during some days in the same project.
 

@@ -6,15 +6,9 @@ Follow these steps to run the experiment and visualize all your Strava activitie
 
 1. Review the provided code for a better understanding of the process and to adapt it according to your desired coordinates.
 
-2. Set an environment variable with your Strava Access Token. You can do this by running the following command in your terminal:
+2. Run the [main.py](main.py) script using your preferred Python interpreter.
 
-   ```bash
-   export ACCESS_TOKEN={YourToken}
-   ```
-
-3. Run the [main.py](main.py) script using your preferred Python interpreter.
-
-4. After running the script, open the generated map in your web browser. You can find the map at [all_activities_map.html](all_activities_map.html).
+3. After running the script, open the generated map in your web browser. You can find the map at [all_activities_map.html](all_activities_map.html).
 
 ## Sample Output Maps
 

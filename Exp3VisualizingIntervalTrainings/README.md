@@ -12,12 +12,6 @@ An example: all my 400m intervals up to January 2024.
 
 2. Customize your interval length at [main.py](../Exp3VisualizingIntervalTrainings/main.py).
 
-3. Set an environment variable with your Strava Access Token. You can do this by running the following command in your terminal:
-
-   ```bash
-   export ACCESS_TOKEN={YourToken}
-   ```
-
-4. Run the [main.py](../Exp3VisualizingIntervalTrainings/main.py) script using your preferred Python interpreter. This will generate a csv file with all your intervals of the chosen length. 
+3. Run the [main.py](../Exp3VisualizingIntervalTrainings/main.py) script using your preferred Python interpreter. This will generate a csv file with all your intervals of the chosen length. 
 
 5. Run [visualize.py](../Exp3VisualizingIntervalTrainings/visualize.py) to generate your plot (interval length needs to be provided here too.)
