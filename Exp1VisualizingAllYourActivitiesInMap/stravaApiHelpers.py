@@ -1,11 +1,12 @@
+# Append parent folder to path
+import os, sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import requests
 import json
 import time
-import datetime
 import logging
-logger = logging.getLogger(__name__)
-
-
+from helpers.logger import logger
 
 #define a function for an api safe call with max retries and sleep time
 def api_safe_call(url:str, max_retries=5, sleep_time=60*15+1):
