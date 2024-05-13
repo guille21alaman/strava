@@ -10,7 +10,7 @@ from extractor.extract_all_activities import Extractor
 
 def extract_data(global_data_folder):
 
-    logger.info("Extracting data")
+    logger.info("Data Extractor Initialized...")
 
     #refress access token strava api
     refresh_access_token()
@@ -29,3 +29,4 @@ def extract_data(global_data_folder):
     extractor.extract_all_activities()
     extractor.extract_all_activity_details()
 
+    logger.info("Data Extractor Finished")

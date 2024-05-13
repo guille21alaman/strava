@@ -5,6 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from global_helpers.logger import logger
 
 def read_all_activities():
+    logger.info(f"Reading all activities...")
     # Read all activivities from json files in global_data/all_activities
     # Format of files is: timestamp_%s_activity_id_%s.json
     # Loop over files and return a list of all activities

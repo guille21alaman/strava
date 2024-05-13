@@ -1,6 +1,11 @@
+#job started variable
+import time
+start_time = time.time()
+
 # Append parent folder to path
 import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+import logging
 
 #generic imports
 from helpers.helpers import *
@@ -14,6 +19,17 @@ output_folder = "output"
 import polyline #to decode polylines
 import folium #to draw maps using folium
 import datetime
+import logging
+
+# Get log level from environment variable
+log_level = os.getenv('LOG_LEVEL', 'INFO')  # Default to 'INFO' if 'LOG_LEVEL' is not set
+
+# Set logger level to the value from the environment variable
+logger.setLevel(logging.getLevelName(log_level))
+
+# Set handler level to the value from the environment variable
+if logger.handlers:
+    logger.handlers[0].setLevel(logging.getLevelName(log_level))
 
 #update extracted data
 extract_data(global_data_folder=global_data_folder)
@@ -22,6 +38,7 @@ extract_data(global_data_folder=global_data_folder)
 all_activities = read_all_activities()
 
 #draw generic map with the desired coordinates
+logger.info("Starting to draw map...")
 city_coordinates = [48.20867108740751, 16.392405856589747] #Example: Vienna - lat,lon
 all_activities_map = folium.Map(
     location = city_coordinates,
@@ -41,20 +58,24 @@ draw_marker(
 #extract max distance of activities and set color map
 max_distance = extract_max_distance(all_activities)
 colormap, all_activities_map = generate_colormap(max_distance, all_activities_map)
+logger.info("Finished with basc map drawing.")
 
 #loop over all activities
 #decode coordinates
 #draw information in the map
 #add image if the activity has an image
-logger.info(f"Plotting Activities. Total: {len(all_activities)}")
+logger.info("Starting to plot activities...")
 
 #max_start_date_timpestamp flag
 #start max_start_date with year 0
 # initialize max_start_date with year 0
 max_start_date = datetime.datetime(1, 1, 1)
+total_runs = 0
 for a in all_activities:
     decoded_coordinates = polyline.decode(a["map"]["summary_polyline"])  #output (lat, lon)
     if (decoded_coordinates) and (a["type"] == "Run"): #make sure it is a run and we have the coordinates
+        total_runs += 1
+        logger.debug(f"Plotting activity: {a['name']}")
         activity_id = a["id"]
 
         #read activiy details
@@ -98,9 +119,17 @@ for a in all_activities:
         folium.PolyLine(locations = decoded_coordinates, 
                     line_opacity = 0.1, popup=popup, color=colormap(a["distance"])).add_to(all_activities_map) 
 
-logger.info("Saving Map...")   
 
 #save map in html file
 directory =__file__.split("\\")[-2]
-all_activities_map.save(f"{directory}/{output_folder}/all_activities_map_%s.html" %(start_date.strftime("%d_%m_%Y")))
+file_name = "all_activities_map"
+save_path = f"{directory}/{output_folder}/{file_name}_%s.html" %(start_date.strftime("%d_%m_%Y"))
+logger.info(f"Saving Map at {save_path}.")   
+all_activities_map.save(save_path)
 
+logger.info("Map saved successfully.")
+logger.info("Finished Job.")
+
+#information about runtime and other interesting facts of the job
+logger.info(f"Job took {time.time()-start_time} seconds.")
+logger.info(f"Total runs plotted: {total_runs}")

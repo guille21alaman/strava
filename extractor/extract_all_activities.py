@@ -31,8 +31,10 @@ class Extractor:
                     timestamp = int(file.split("_")[1])
                     if timestamp > latest_timestamp:
                         latest_timestamp = timestamp
+                        latest_date = datetime.datetime.fromtimestamp(latest_timestamp).strftime("%Y-%m-%dT%H:%M:%SZ")
             #get all activities from strava api
-            logger.info(f"Extracting activities from Strava API... Latest Timestamp: {latest_timestamp}")
+            logger.info(f"Extracting activities from Strava API... ")
+            logger.info(f"Latest Activity Date and Timestamp from current extraction: {latest_date} - {latest_timestamp}")
             extracted_activities = self.strava.get_all_activities(after=latest_timestamp, max_activities=200)
 
             #store each of the activities in a json file under data folder
@@ -40,16 +42,17 @@ class Extractor:
             #add additional check to make sure that the activity id is not already stored
             for a in extracted_activities:
                 start_date = datetime.datetime.strptime(a["start_date"], "%Y-%m-%dT%H:%M:%SZ")
-                start_date = int(start_date.timestamp())
+                start_date_timestamp = int(start_date.timestamp())
                 activity_id = a["id"]
                 if str(activity_id) in activity_ids:
                     stored = False #no activity stored (if all like this, the iteration will stop)
                 else:
-                    logger.debug(f"Storing activity with id {activity_id} and name {a['name']}")
-                    with open("%s/timestamp_%s_activity_id_%s.json" %(self.all_activities_folder,start_date, activity_id), "w") as f:
+                    logger.debug(f"Storing activity with id {activity_id} and name {a['name']} and date {start_date}")
+                    with open("%s/timestamp_%s_activity_id_%s.json" %(self.all_activities_folder,start_date_timestamp, activity_id), "w") as f:
                         f.write(json.dumps(a))
                     #activity was stored
                     stored = True
+            logger.info("All Activities Extracted from Strava API")
 
     def extract_all_activity_details(self):
         details_folder = self.global_data_folder + "/details/"
@@ -61,7 +64,7 @@ class Extractor:
                 with open("%s/%s" %(self.all_activities_folder,file), "r") as f:
                     all_activities.append(json.loads(f.read()))
         
-        logger.info("Extracting Activity Details...")
+        logger.info("Extracting Activity Details from Strava API...")
         for a in all_activities:        
             activity_id = a["id"]
             #extract and store activity details if not already stored
@@ -71,6 +74,6 @@ class Extractor:
                 activity = self.strava.get_activity_details(activity_id=a["id"])
                 with open("%s/timestamp_%s_activity_id_%s_details.json" %(details_folder, start_date, activity_id), "w") as f:
                     f.write(json.dumps(activity))
-            else:
-                with open("%s/timestamp_%s_activity_id_%s_details.json" %(details_folder,start_date, activity_id), "r") as f:
-                    activity = json.loads(f.read())
+                    logger.debug(f"Extracted details for activity {activity_id} with timestamp {start_date}")
+        
+        logger.info("All Activity Details Extracted from Strava API")

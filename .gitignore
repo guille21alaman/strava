@@ -5,3 +5,4 @@ Exp2VisualizingPathPerKm/data/*
 Exp2VisualizingPathPerKm/vis/*
 global_data/*
 .env 
+launch.json
